@@ -50,6 +50,14 @@ const COLOR = {
     "茶" : brown_c
 }
 
+const FONT_NAME = {
+    "筆記体":"ShelleyAllegroBT Regular",
+    "角ゴシック体":"DFHSGothic W3-WINP-RKSJ-H",
+    "丸ゴシック体":"HGMaruGothicMPRO",
+    "楷書体":"FGKaishoNT M",
+    "明朝体":"KozMinPro Regular-90ms-RKSJ-H"
+}
+
 //CSVをロード
 function LoadCSV(){
     var file = File.openDialog("CSVを選択してください", "*.csv");
@@ -151,7 +159,7 @@ function CreateTextFrame(name_list_and_info_list_dict){
     var ab_height = ab_top_side - ab_bottom_side;
 
     //CSVから取得した情報を展開
-    var font = name_list_and_info_list_dict["font"];
+    var font = app.textFonts.getByName(FONT_NAME[name_list_and_info_list_dict["font"]]);
     var color = name_list_and_info_list_dict["color"];
     var size = name_list_and_info_list_dict["size"];
     var head_x_margin = name_list_and_info_list_dict["head_x_margin"];
@@ -182,7 +190,7 @@ function CreateTextFrame(name_list_and_info_list_dict){
         for(i=0;i<name_list.length;i++){
             var primer_tf = doc.textFrames.add();
             primer_tf.contents = name_list[i];
-            //primer_tf.textRange.characterAttributes.font = ;
+            //primer_tf.textRange.characterAttributes.textFont = font;
             primer_tf.textRange.characterAttributes.size = size;
             var color_tf = primer_tf.duplicate();
             primer_tf.textRange.characterAttributes.fillColor = sw_primer.color;
