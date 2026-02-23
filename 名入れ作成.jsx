@@ -11,34 +11,34 @@ blue_c.yellow = 0;
 blue_c.black = 0;
 
 const green_c = new CMYKColor();
-green_c.cyan = 63.99;
-green_c.magenta = 69.27;
-green_c.yellow = 68.81;
-green_c.black = 78.82;
+green_c.cyan = 82.06;
+green_c.magenta = 5.67;
+green_c.yellow = 100;
+green_c.black = 0.35;
 
 const pink_c = new CMYKColor();
-pink_c.cyan = 63.99;
-pink_c.magenta = 69.27;
-pink_c.yellow = 68.81;
-pink_c.black = 78.82;
+pink_c.cyan = 2.54;
+pink_c.magenta = 77.4;
+pink_c.yellow = 3.68;
+pink_c.black = 0;
 
 const orange_c = new CMYKColor();
-orange_c.cyan = 63.99;
-orange_c.magenta = 69.27;
-orange_c.yellow = 68.81;
-orange_c.black = 78.82;
+orange_c.cyan = 2.24;
+orange_c.magenta = 49.27;
+orange_c.yellow = 100;
+orange_c.black = 0;
 
 const gold_c = new CMYKColor();
-gold_c.cyan = 63.99;
-gold_c.magenta = 69.27;
-gold_c.yellow = 68.81;
-gold_c.black = 78.82;
+gold_c.cyan = 32.57;
+gold_c.magenta = 38.12;
+gold_c.yellow = 100;
+gold_c.black = 5.98;
 
 const brown_c = new CMYKColor();
-brown_c.cyan = 63.99;
-brown_c.magenta = 69.27;
-brown_c.yellow = 68.81;
-brown_c.black = 78.82;
+brown_c.cyan = 44.06;
+brown_c.magenta = 69.09;
+brown_c.yellow = 95.34;
+brown_c.black = 42.26;
 
 const COLOR = {
     "黒" : black_c,
