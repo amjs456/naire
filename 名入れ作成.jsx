@@ -73,46 +73,51 @@ function LoadCSV(){
                 text = text.substring(1);
             }
             
-            var name_with_info_list = text.split(/\r\n|\r|\n/);
-            return name_with_info_list;
+            var parsed_csv_list=[];
+            var row_list = text.split(/\r\n|\r|\n/);
+            for(var i=0;i<row_list.length;i++){
+                var col_list = row_list[i].split(",")
+                parsed_csv_list.push(col_list);
+            }
+            return parsed_csv_list;
         }
     }
 }
 
 //CSVの解析
-function CreateNameListAndInfoListDict(name_with_info_list){
-    const info_line_num = 4;
+function CreateNameListAndInfoListDict(parsed_csv_list){
+    const info_line_num = 1;
     var name_list_and_info_list_dict= {};
-    var prefix= "__AB__:";
-    name_list_and_info_list_dict["font"] = name_with_info_list[0];
-    name_list_and_info_list_dict["color"] = name_with_info_list[1];
+    var class_prefix= "__AB__:";
 
-    if (name_with_info_list[2].match(/^[+-]?(?:\d+\.?\d*|\.\d+)$/)){
-        size = Number(name_with_info_list[2]);
-        if (size){
-            name_list_and_info_list_dict["size"] = size;
-        } else {
-            alert("サイズは数値のみを入力してください");
-        }  
-    } else {
-        alert("サイズは半角で入力してください");
-    }
-
-    var head_x_margin_mm = name_with_info_list[3];
-    var head_x_margin_px = UnitValue(head_x_margin_mm, "mm").as("px");
-    name_list_and_info_list_dict["head_x_margin"] = head_x_margin_px;
+    //var head_x_margin_mm = name_with_info_list[3];
+    //var head_x_margin_px = UnitValue(head_x_margin_mm, "mm").as("px");
+    //name_list_and_info_list_dict["head_x_margin"] = head_x_margin_px;
     
-    name_list_and_info_list_dict["classes"] = {};
-    for(i=0;i<name_with_info_list.length-info_line_num;i++){
-        if(name_with_info_list[i+info_line_num].indexOf(prefix)===0){
-            var name_list = []
-            var class_name = name_with_info_list[i+info_line_num].substring(prefix.length);
+    //class別にクラスの名簿を作る
+    var class_list = [];
+    var name_and_info_list = [];
+    var is_first_loop = true;
+    var class_name = "";
+    //全クラス全員forで回す
+    for(i=0;i<parsed_csv_list.length-info_line_num;i++){
+        //__AB__:がない場合name_and_info_listへ、__AB__:がある場合
+        if(parsed_csv_list[i+info_line_num][0].indexOf(class_prefix)===0){
+            if(!is_first_loop){
+                class_list.push([class_name,name_and_info_list]);
+            }
+            class_name = parsed_csv_list[i+info_line_num][0].substring(class_prefix.length);
+            name_and_info_list = [];
         } else {
-            name_list.push(name_with_info_list[i+info_line_num]);
+            name_and_info_list.push(parsed_csv_list[i+info_line_num]);
+            if(i===parsed_csv_list.length-info_line_num-1){
+                class_list.push([class_name,name_and_info_list]);
+            }
         }
-        name_list_and_info_list_dict["classes"][class_name] = name_list;
+        is_first_loop = false;
     }
-    return name_list_and_info_list_dict;
+    alert(class_list);
+    return class_list;
 }
 
 function CreateTextFrame(name_list_and_info_list_dict){
@@ -159,7 +164,7 @@ function CreateTextFrame(name_list_and_info_list_dict){
     var ab_height = ab_top_side - ab_bottom_side;
 
     //CSVから取得した情報を展開
-    var font = app.textFonts.getByName(FONT_NAME[name_list_and_info_list_dict["font"]]);
+    //var font = app.textFonts.getByName(FONT_NAME[name_list_and_info_list_dict["font"]]);
     var color = name_list_and_info_list_dict["color"];
     var size = name_list_and_info_list_dict["size"];
     var head_x_margin = name_list_and_info_list_dict["head_x_margin"];
@@ -185,16 +190,16 @@ function CreateTextFrame(name_list_and_info_list_dict){
         is_first_loop = false
 
         var ab_count = 1;
-        name_list = classes[class_name];
+        name_font_color_list = classes[class_name];
         ab.name = class_name + "_" + ab_count.toString();
-        for(i=0;i<name_list.length;i++){
+        for(i=0;i<name_font_color_list.length;i++){
             var primer_tf = doc.textFrames.add();
-            primer_tf.contents = name_list[i];
-            //primer_tf.textRange.characterAttributes.textFont = font;
+            primer_tf.contents = name_font_color_list[i][0];
+            //primer_tf.textRange.characterAttributes.textFont = name_font_color_list[i][1];
             primer_tf.textRange.characterAttributes.size = size;
             var color_tf = primer_tf.duplicate();
             primer_tf.textRange.characterAttributes.fillColor = sw_primer.color;
-            color_tf.textRange.characterAttributes.fillColor = COLOR["黒"];
+            color_tf.textRange.characterAttributes.fillColor = COLOR[name_font_color_list[i][2]];
             var outlined_primer_group = primer_tf.createOutline();
             var outlined_color_group = color_tf.createOutline();
             var group_width = outlined_primer_group.geometricBounds[2] - outlined_primer_group.geometricBounds[0];
@@ -219,6 +224,6 @@ function CreateTextFrame(name_list_and_info_list_dict){
     }
 }
 
-name_with_info_list = LoadCSV();
-name_list_and_info_list_dict = CreateNameListAndInfoListDict(name_with_info_list);
+parsed_csv_list = LoadCSV();
+name_list_and_info_list_dict = CreateNameListAndInfoListDict(parsed_csv_list);
 CreateTextFrame(name_list_and_info_list_dict);
