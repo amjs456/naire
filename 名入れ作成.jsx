@@ -116,11 +116,10 @@ function CreateNameListAndInfoListDict(parsed_csv_list){
         }
         is_first_loop = false;
     }
-    alert(class_list);
     return class_list;
 }
 
-function CreateTextFrame(name_list_and_info_list_dict){
+function CreateTextFrame(class_list){
     var doc = app.activeDocument;
 
     function CreateArtboard(){
@@ -163,17 +162,10 @@ function CreateTextFrame(name_list_and_info_list_dict){
     var ab_width = ab_right_side - ab_left_side;
     var ab_height = ab_top_side - ab_bottom_side;
 
-    //CSVから取得した情報を展開
-    //var font = app.textFonts.getByName(FONT_NAME[name_list_and_info_list_dict["font"]]);
-    var color = name_list_and_info_list_dict["color"];
-    var size = name_list_and_info_list_dict["size"];
-    var head_x_margin = name_list_and_info_list_dict["head_x_margin"];
-    var classes = name_list_and_info_list_dict["classes"];
-
     //textFrameを生成する位置とマージンを指定
-    const head_x_coordinate = 380.409190390055;
+    var head_x_coordinate = 380.409190390055;
     //名入れ位置の右辺のX座標を計算
-    var right_x_coordinate = right_x_coordinate_base = head_x_coordinate - head_x_margin;//right_x_coordinateは名入れの右
+    //var right_x_coordinate = right_x_coordinate_base = head_x_coordinate - head_x_margin;//right_x_coordinateは名入れの右
 
     //中心のY座標。positionで使うときは、y_coordinate + height/2
     var y_coordinate = y_coordinate_base = 857.197028345381;
@@ -183,23 +175,34 @@ function CreateTextFrame(name_list_and_info_list_dict){
 
     is_first_loop = true;
     //名前のリストからtextFrameを生成
-    for (var class_name in classes) {
+    for(var class_i=0;class_i<class_list.length;class_i++){
         if(!is_first_loop){
             ab = CreateArtboard();
         }
         is_first_loop = false
 
         var ab_count = 1;
-        name_font_color_list = classes[class_name];
-        ab.name = class_name + "_" + ab_count.toString();
-        for(i=0;i<name_font_color_list.length;i++){
+        ab.name = class_list[class_i][0]+ab_count.toString();
+        
+        for(var name_i=0;name_i<class_list[class_i].length;name_i++){
+            var name = class_list[class_i][1][name_i][0];
+            var font = class_list[class_i][1][name_i][1];
+            var color = class_list[class_i][1][name_i][2];
+            var size = parseInt(class_list[class_i][1][name_i][3]);
+            var head_x_margin = parseInt(class_list[class_i][1][name_i][4]);
+
             var primer_tf = doc.textFrames.add();
-            primer_tf.contents = name_font_color_list[i][0];
-            //primer_tf.textRange.characterAttributes.textFont = name_font_color_list[i][1];
+            primer_tf.contents = name;
+            //primer_tf.textRange.characterAttributes.textFont = font;
             primer_tf.textRange.characterAttributes.size = size;
             var color_tf = primer_tf.duplicate();
             primer_tf.textRange.characterAttributes.fillColor = sw_primer.color;
-            color_tf.textRange.characterAttributes.fillColor = COLOR[name_font_color_list[i][2]];
+            color_tf.textRange.characterAttributes.fillColor = COLOR[color];
+        }
+    }
+    /*
+    for (var class_name in classes) {
+        for(i=0;i<name_font_color_list.length;i++){
             var outlined_primer_group = primer_tf.createOutline();
             var outlined_color_group = color_tf.createOutline();
             var group_width = outlined_primer_group.geometricBounds[2] - outlined_primer_group.geometricBounds[0];
@@ -222,6 +225,7 @@ function CreateTextFrame(name_list_and_info_list_dict){
             }
         }
     }
+    */
 }
 
 parsed_csv_list = LoadCSV();
