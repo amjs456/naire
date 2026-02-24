@@ -200,7 +200,7 @@ function CreateTextFrame(class_list){
             var font = class_list[class_i][1][name_i][1];
             var color = class_list[class_i][1][name_i][2];
             var size = parseInt(class_list[class_i][1][name_i][3]);
-            var head_x_margin = parseInt(class_list[class_i][1][name_i][4]);
+            var head_x_margin = UnitValue(parseInt(class_list[class_i][1][name_i][4]), "mm").as("px");
 
             var primer_tf = doc.textFrames.add();
             primer_tf.contents = name;
