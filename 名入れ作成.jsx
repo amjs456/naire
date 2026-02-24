@@ -129,12 +129,12 @@ function CreateTextFrame(class_list){
                 ab_bottom_side = ab_top_side - ab_height;
                 ab_left_side = base_left_side;
                 ab_right_side = ab_left_side + ab_width;
-                right_x_coordinate = right_x_coordinate_base;
+                x_coordinate = x_coordinate_base;
                 y_coordinate = y_coordinate_base = y_coordinate_base - ab_height - ab_margin;
            } else {
                 ab_left_side = ab_right_side + ab_margin;
                 ab_right_side = ab_left_side + ab_width;
-                right_x_coordinate = right_x_coordinate + ab_width + ab_margin;
+                x_coordinate = x_coordinate + ab_width + ab_margin;
                 y_coordinate = y_coordinate_base;
             }
             var rect = [ab_left_side, ab_top_side, ab_right_side, ab_bottom_side];
@@ -163,7 +163,7 @@ function CreateTextFrame(class_list){
     var ab_height = ab_top_side - ab_bottom_side;
 
     //textFrameを生成する位置とマージンを指定
-    var head_x_coordinate = 380.409190390055;
+    var head_x_coordinate = head_x_coordinate_base = 380.409190390055;
     //名入れ位置の右辺のX座標を計算
     //var right_x_coordinate = right_x_coordinate_base = head_x_coordinate - head_x_margin;//right_x_coordinateは名入れの右
 
@@ -184,7 +184,7 @@ function CreateTextFrame(class_list){
         var ab_count = 1;
         ab.name = class_list[class_i][0]+ab_count.toString();
         
-        for(var name_i=0;name_i<class_list[class_i].length;name_i++){
+        for(var name_i=0;name_i<class_list[class_i][1].length;name_i++){
             var name = class_list[class_i][1][name_i][0];
             var font = class_list[class_i][1][name_i][1];
             var color = class_list[class_i][1][name_i][2];
@@ -193,23 +193,25 @@ function CreateTextFrame(class_list){
 
             var primer_tf = doc.textFrames.add();
             primer_tf.contents = name;
-            //primer_tf.textRange.characterAttributes.textFont = font;
+            //primer_tf.textRange.characterAttributes.textFont = FONT_NAME[font];
             primer_tf.textRange.characterAttributes.size = size;
             var color_tf = primer_tf.duplicate();
             primer_tf.textRange.characterAttributes.fillColor = sw_primer.color;
             color_tf.textRange.characterAttributes.fillColor = COLOR[color];
+            var outlined_primer_group = primer_tf.createOutline();
+            var outlined_color_group = color_tf.createOutline();
+            var group_width = outlined_primer_group.geometricBounds[2] - outlined_primer_group.geometricBounds[0];
+            var group_height = outlined_primer_group.geometricBounds[1] - outlined_primer_group.geometricBounds[3];
+            var x_coordinate = head_x_coordinate - head_x_margin - group_width;
+            outlined_primer_group.position = outlined_color_group.position = [x_coordinate, y_coordinate+(group_height/2)];
+            y_coordinate = y_coordinate - y_coordinate_margin;
         }
     }
     /*
     for (var class_name in classes) {
         for(i=0;i<name_font_color_list.length;i++){
-            var outlined_primer_group = primer_tf.createOutline();
-            var outlined_color_group = color_tf.createOutline();
-            var group_width = outlined_primer_group.geometricBounds[2] - outlined_primer_group.geometricBounds[0];
-            var group_height = outlined_primer_group.geometricBounds[1] - outlined_primer_group.geometricBounds[3];
-            var x_coordinate = right_x_coordinate - group_width;
-            outlined_primer_group.position = outlined_color_group.position = [x_coordinate, y_coordinate+(group_height/2)];
-            y_coordinate = y_coordinate - y_coordinate_margin;
+            
+            
 
             //10本ずつアートボードを分ける
             if((i+1)%10==0){
