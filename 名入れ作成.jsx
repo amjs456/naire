@@ -96,20 +96,32 @@ function CreateNameListAndInfoListDict(parsed_csv_list){
     
     //class別にクラスの名簿を作る
     var class_list = [];
+
+    //クラス内の名前を入れるリスト
     var name_and_info_list = [];
-    var is_first_loop = true;
+
+    //クラス名の変数
     var class_name = "";
+
+
+    var is_first_loop = true;
     //全クラス全員forで回す
     for(i=0;i<parsed_csv_list.length-info_line_num;i++){
-        //__AB__:がない場合name_and_info_listへ、__AB__:がある場合
+        //__AB__:がない場合name_and_info_listへ、__AB__:がある場合name_and_info_listをclass_listへ
         if(parsed_csv_list[i+info_line_num][0].indexOf(class_prefix)===0){
+            //最初の__AB__:でclass_listへ入れるのを避ける。2回目の__AB__:以降はclass_listへ
             if(!is_first_loop){
                 class_list.push([class_name,name_and_info_list]);
             }
+            //クラス名の取得
             class_name = parsed_csv_list[i+info_line_num][0].substring(class_prefix.length);
+            //name_and_info_listを空に
             name_and_info_list = [];
         } else {
+            //名前をname_and_info_listへ
             name_and_info_list.push(parsed_csv_list[i+info_line_num]);
+
+            //最後の名前の場合、name_and_info_listをclass_listへ
             if(i===parsed_csv_list.length-info_line_num-1){
                 class_list.push([class_name,name_and_info_list]);
             }
@@ -134,7 +146,7 @@ function CreateTextFrame(class_list){
            } else {
                 ab_left_side = ab_right_side + ab_margin;
                 ab_right_side = ab_left_side + ab_width;
-                head_x_coordinate = x_coordinate + ab_width + ab_margin;
+                head_x_coordinate = head_x_coordinate + ab_width + ab_margin;
                 y_coordinate = y_coordinate_base;
             }
             var rect = [ab_left_side, ab_top_side, ab_right_side, ab_bottom_side];
@@ -164,11 +176,10 @@ function CreateTextFrame(class_list){
 
     //textFrameを生成する位置とマージンを指定
     var head_x_coordinate = head_x_coordinate_base = 380.409190390055;
-    //名入れ位置の右辺のX座標を計算
-    //var right_x_coordinate = right_x_coordinate_base = head_x_coordinate - head_x_margin;//right_x_coordinateは名入れの右
-
+    
     //中心のY座標。positionで使うときは、y_coordinate + height/2
     var y_coordinate = y_coordinate_base = 857.197028345381;
+
     var ab_margin = 50;
     const y_coordinate_margin = 62.3620984246008;
     
