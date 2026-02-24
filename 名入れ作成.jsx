@@ -129,12 +129,12 @@ function CreateTextFrame(class_list){
                 ab_bottom_side = ab_top_side - ab_height;
                 ab_left_side = base_left_side;
                 ab_right_side = ab_left_side + ab_width;
-                x_coordinate = x_coordinate_base;
+                head_x_coordinate = head_x_coordinate_base;
                 y_coordinate = y_coordinate_base = y_coordinate_base - ab_height - ab_margin;
            } else {
                 ab_left_side = ab_right_side + ab_margin;
                 ab_right_side = ab_left_side + ab_width;
-                x_coordinate = x_coordinate + ab_width + ab_margin;
+                head_x_coordinate = x_coordinate + ab_width + ab_margin;
                 y_coordinate = y_coordinate_base;
             }
             var rect = [ab_left_side, ab_top_side, ab_right_side, ab_bottom_side];
@@ -205,29 +205,17 @@ function CreateTextFrame(class_list){
             var x_coordinate = head_x_coordinate - head_x_margin - group_width;
             outlined_primer_group.position = outlined_color_group.position = [x_coordinate, y_coordinate+(group_height/2)];
             y_coordinate = y_coordinate - y_coordinate_margin;
-        }
-    }
-    /*
-    for (var class_name in classes) {
-        for(i=0;i<name_font_color_list.length;i++){
-            
-            
 
-            //10本ずつアートボードを分ける
-            if((i+1)%10==0){
-                //10本の区切りの時
-                //現在の要素がname_listの一番最後ならbreak
-                if((i+1)==name_list.length){
+            if((name_i+1)%10===0){
+                if((name_i+1)===class_list[class_i][1].length){
                     break;
                 }
-                //違えばアートボードを作成
                 ab = CreateArtboard();
                 ab_count++;
-                ab.name = class_name + "_" + ab_count.toString();
+                ab.name = class_list[class_i][0];
             }
         }
     }
-    */
 }
 
 parsed_csv_list = LoadCSV();
