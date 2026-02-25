@@ -90,10 +90,6 @@ function CreateNameListAndInfoListDict(parsed_csv_list){
     var name_list_and_info_list_dict= {};
     var class_prefix= "__AB__:";
 
-    //var head_x_margin_mm = name_with_info_list[3];
-    //var head_x_margin_px = UnitValue(head_x_margin_mm, "mm").as("px");
-    //name_list_and_info_list_dict["head_x_margin"] = head_x_margin_px;
-    
     //class別にクラスの名簿を作る
     var class_list = [];
 
@@ -186,6 +182,7 @@ function CreateTextFrame(class_list){
 
     is_first_loop = true;
     //名前のリストからtextFrameを生成
+    outer:
     for(var class_i=0;class_i<class_list.length;class_i++){
         if(!is_first_loop){
             ab = CreateArtboard();
@@ -193,15 +190,27 @@ function CreateTextFrame(class_list){
         is_first_loop = false
 
         var ab_count = 1;
-        ab.name = class_list[class_i][0]+ab_count.toString();
+        ab.name = class_list[class_i][0] + "_" + ab_count.toString();
         
         for(var name_i=0;name_i<class_list[class_i][1].length;name_i++){
             var name = class_list[class_i][1][name_i][0];
             var font = class_list[class_i][1][name_i][1];
             var color = class_list[class_i][1][name_i][2];
-            var size = parseInt(class_list[class_i][1][name_i][3]);
-            var head_x_margin = UnitValue(parseInt(class_list[class_i][1][name_i][4]), "mm").as("px");
 
+            if (/^(?:\d{1,2})$/.test(parseInt(class_list[class_i][1][name_i][3]))){
+                var size = parseInt(class_list[class_i][1][name_i][3]);
+            } else {
+                alert("サイズの数値を確認してください");
+                break outer;
+            }
+            
+            if (/^(?:\d{1,3}|\d{1,3}\.\d{1,2})$/.test(class_list[class_i][1][name_i][4])){
+                var head_x_margin = UnitValue(parseInt(class_list[class_i][1][name_i][4]), "mm").as("px");
+            } else {
+                alert("間隔の数値を確認してください");
+                break outer;
+            }
+            
             var primer_tf = doc.textFrames.add();
             primer_tf.contents = name;
             //primer_tf.textRange.characterAttributes.textFont = FONT_NAME[font];
@@ -223,7 +232,7 @@ function CreateTextFrame(class_list){
                 }
                 ab = CreateArtboard();
                 ab_count++;
-                ab.name = class_list[class_i][0];
+                ab.name = class_list[class_i][0] + "_" + ab_count.toString();
             }
         }
     }
