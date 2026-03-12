@@ -51,11 +51,11 @@ const COLOR = {
 }
 
 const FONT_NAME = {
-    "筆記体":"ShelleyAllegroBT Regular",
-    "角ゴシック体":"DFHSGothic W3-WINP-RKSJ-H",
+    "筆記体":"ShelleyAllegroBT-Regular",
+    "角ゴシック体":"DFHSGothic-W3-WINP",
     "丸ゴシック体":"HGMaruGothicMPRO",
-    "楷書体":"FGKaishoNT M",
-    "明朝体":"KozMinPro Regular-90ms-RKSJ-H"
+    "楷書体":"FGKaishoNT-M",
+    "明朝体":"KozMinPro-Regular"
 }
 
 //CSVをロード
@@ -213,7 +213,7 @@ function CreateTextFrame(class_list){
             
             var primer_tf = doc.textFrames.add();
             primer_tf.contents = name;
-            //primer_tf.textRange.characterAttributes.textFont = FONT_NAME[font];
+            primer_tf.textRange.characterAttributes.textFont = app.textFonts.getByName(FONT_NAME[font]);
             primer_tf.textRange.characterAttributes.size = size;
             var color_tf = primer_tf.duplicate();
             primer_tf.textRange.characterAttributes.fillColor = sw_primer.color;
